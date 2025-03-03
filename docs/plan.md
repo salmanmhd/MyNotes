@@ -1,8 +1,3 @@
----
-title: Plan to do things
-description: Complete all the planned things
----
-
 # Important JavaScript Topics to Cover
 
 ## Fundamentals
@@ -73,3 +68,17 @@ description: Complete all the planned things
 # resources
 
 - svg icons: https://icons8.com/icons/
+
+# React
+
+- [ ] Reconsilition
+- [ ] Hooks
+- [ ] Create your own hooks
+- [ ] Context API, Suspense API
+- [ ] React Router
+- [ ] Styling - Tailwind, Radix UI
+- [ ] Understand tooling behind the generating bootstraping the react apps
+- [ ] performance improvements - react hook forms,
+- [ ] React Query
+- [ ] Testing - Optional
+- [ ] Next Js

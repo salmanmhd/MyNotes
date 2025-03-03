@@ -1,11 +1,15 @@
----
-title: Notes
-description: All my personal notes
----
+Becoming a 10x learner
 
-# 90 days of code and Grow challenge
+- being distracted is a natural thing, which is good for human to react to uncertainity so dont be tensed for this
+- what you can do is try to focus properly for few minutes, then take a break and then focus again
+- whether make small progress but beign consistent is the most important thing
 
-## HTML
+1. Try to focus for few minutes, then take a break and recall all the things that you learned
+2. If lost, then comeback and try again to focus
+3. Learn to focus, by some of the exercise like reading, focusing on a point for few minutes
+4. Having a goal is must. Like if you are learning something, why are you learning and are really going closer to your goal as you progress.
+
+# HTML
 
 ```HTML
 <!DOCTYPE html>
@@ -60,20 +64,20 @@ Semantic HTML uses meaningful tags that describe the purpose of content. Common 
 </header>
 ```
 
-## CSS
+# CSS
 
-### Flexbox Essentials
+## Flexbox Essentials
 
 - **Main Axis**: Horizontal (by default).
 - **Cross Axis**: Vertical (by default).
 
-#### Alignment Properties
+### Alignment Properties
 
 - **Justify-content**: Aligns items along the main axis.
 - **Align-items**: Aligns items along the cross axis.
   - Common values: `flex-start`, `flex-end`, `center`, `space-between`, `space-around`, `space-evenly`.
 
-##### Other Flexbox Properties
+#### Other Flexbox Properties
 
 - **Align-content**: Aligns multi-line flex containers along the cross axis.
 - **Gap, Row-gap, Column-gap**: Defines space between items.
@@ -130,6 +134,75 @@ Semantic HTML uses meaningful tags that describe the purpose of content. Common 
 - `grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));` This will auto maintain the number of columns as per the width.
 - `grid-template-columns: repeat(auto-fill, 250px)`
 
+# Styled Components
+
+- `styled-components` is a popular library for creating styled components in React.
+- It allows you to create reusable and styled components with ease.
+- We write styles for the element in css but a bit in a different mannner
+
+```javascript
+const H1 = styled.h1`
+  color: red;
+  font-size: 2rem;
+`;
+
+<H1>Styled Components</H1>;
+```
+
+- Since we are writing the styles in back tick, we can write js as well like:
+
+```javascript
+const H1 = styled.h1`
+  color: red;
+  font-size: 2rem;
+  background-color: ${12 > 10 ? 'green' : 'red'};
+`;
+```
+
+## Writing style as a variable
+
+```javascript
+const styles = css`
+  color: red;
+`;
+
+const Heading = styled.h1`${styles}`
+  background-color: grey;
+  ${styles};
+`
+```
+
+## Components for styling
+
+- we have two options for proprs
+- `types` - this will act as normal props and we can do styling based on this but this is not effecient
+- `as` - this will treat the props as real HTML element
+
+```javascript
+// using types
+<Heading type="h1">Styled Components</Heading>
+
+// using as
+<Heading as="h1">Styled Components</Heading>
+
+
+// -----------
+
+const Heading = styled.h1`
+  ${props => props.type === 'h1' && css`
+    font-size: 3rem;
+  `}
+
+  ${props => props.type === 'h2' && css`
+    font-size: 2rem;
+  `}
+
+
+  color: red;
+`;
+
+```
+
 # Javascript
 
 ## Global Execution Context
@@ -170,7 +243,6 @@ Semantic HTML uses meaningful tags that describe the purpose of content. Common 
   }
   array(obj);
    (obj); // [12, 3, 4, 123]
-
   ```
 
 ## `Execution Context` (Call Stack, Execution context stack, program stack, control stack, runtime stack, machine stack)
@@ -308,22 +380,22 @@ An **IIFE** is a function that is **executed immediately** after being defined. 
 
 ### Use Cases
 
-1. **Avoid Global Variable Pollution**  
+1. **Avoid Global Variable Pollution**
    Prevents variables from leaking into the global scope by encapsulating them in a local scope.
 
-2. **Encapsulation of Code**  
+2. **Encapsulation of Code**
    Keeps variables and functions private, avoiding naming conflicts and ensuring that the code remains isolated.
 
-3. **Safe Initialization**  
+3. **Safe Initialization**
    Executes initialization code that only needs to run once, such as configuration settings or setting up state.
 
-4. **Modular Code**  
+4. **Modular Code**
    Allows for the creation of self-contained modules of code that do not interfere with other parts of the application.
 
-5. **Event-Driven Code**  
+5. **Event-Driven Code**
    Used to create isolated environments for event listeners, preventing variables from affecting other event handlers.
 
-6. **Avoid Variable Hoisting Issues**  
+6. **Avoid Variable Hoisting Issues**
    Since IIFEs are executed immediately, they help avoid issues with variable hoisting, ensuring variables are not misused before they are defined.
 
 ## Higher Order Functions
@@ -1491,6 +1563,106 @@ export async function action({ request, params }) {
 }
 ```
 
+# React Query
+
+- for managing remote(server) state
+
+## features
+
+- caching
+- automatic loading and error states
+- refetching to keep the state synced
+- prefetcing
+- easy remote mutations
+- offline support
+
+## Getting started
+
+### 1. Define a query client
+
+```javascript
+// 1. install react query and dev tools
+
+npm i @tanstack/react-query@4
+npm i @tanstack/react-query-devtools
+
+// 2. create query client
+const queryClient = new QueryClient({
+  defaultOptions: {
+    staleTime: 1000 * 60 ,
+  }
+});
+
+// 3. wrapping the component
+return(
+  <QueryClientProvider client={queryClient}>
+    <ReactQueryDevTools initialIsOpen={false} />
+    <App />
+  </QueryClientProvider>
+)
+
+```
+
+### 2. Using Queries
+
+#### i. Fetching data
+
+```javascript
+const { data, isLoading, error } = useQuery({
+  queryKey: ['menu'],
+  queryFn: getData,
+});
+```
+
+#### ii. Mutations
+
+```javascript
+const { mutate } = useMutation({
+  mutationFn: (id) => updateData(id),
+  onSuccess: () => {
+    queryClient.invalidateQueries({
+      // invalidating the cache, refetching the data
+      queryKey: ['menu'], // invalidating only the menu
+    });
+  },
+});
+```
+
+# Toast
+
+```bash
+npm i react-hot-toast
+```
+
+just put it in the parent and define styles or any other props required
+
+```javascript
+<Toaster
+  position='top-center'
+  gutter={12}
+  containerStyle={{ margin: '8px' }}
+  toastOptions={{
+    success: {
+      duration: 3000,
+    },
+    error: {
+      duration: 5000,
+    },
+    style: {
+      fontSize: '16px',
+      maxWidth: '500px',
+      padding: '16px 24px',
+      backgroundColor: 'var(--color-grey-0)',
+      color: 'var(--color-grey-700)',
+    },
+  }}
+/>
+```
+
+```javascript
+toast.success('hi there');
+```
+
 # Builing a project
 
 ## Smaller projects
@@ -1653,14 +1825,57 @@ export async function action({ request }) {
 
 ## React Query
 
-`````javascript
+```javascript
 npm i @tanstack/react-query
 ```
 
 # Axios
 
-````javascript
-axios.post('url', { data });
+## get request
+
+```javascript
+const response = await axios.get('<https://api.example.com/data>');
+console.log(response.data);
+```
+
+## post request
+
+```javascript
+async function postData() {
+  const url = '<https://api.example.com/postData>';
+  const dataToSend = {
+    key1: 'value1',
+    key2: 'value2',
+  };
+
+  try {
+    const response = await axios.post(url, dataToSend);
+    console.log(response.data);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+```
+
+## patch request
+
+```javascript
+axios
+  .patch('https://jsonplaceholder.typicode.com/posts/1', {}) // Empty body
+  .then((response) => {
+    console.log('PATCH Response:', response.data);
+  })
+  .catch((error) => {
+    console.error('PATCH Error:', error);
+  });
+```
+
+## delete request
+
+```javascript
+const deleteResponse = await axios.delete(
+  'https://jsonplaceholder.typicode.com/posts/1'
+);
 ```
 
 # Named and default exports
@@ -1738,21 +1953,22 @@ interface Person {
 - `extends` is used to extend the property of other interface
 
 //implements: this will make sure that class must have the same types of properties that a person has,
+
+```typescript
 class Employee implements Person {
-name: string;
-age: number;
+  name: string;
+  age: number;
 
-constructor(n: string, a: number) {
-this.name = n;
-this.age = a;
-}
+  constructor(n: string, a: number) {
+    this.name = n;
+    this.age = a;
+  }
 
-greet(phrase: string) {
-(`${phrase} ${this.name}`);
+  greet(phrase: string) {
+    `${phrase} ${this.name}`;
+  }
 }
-}
-
-`````
+```
 
 ## Array
 
@@ -1828,6 +2044,112 @@ let output1 = identity < string > 'str';
 let output2 = identity < number > 12;
 ```
 
+## APIs
+
+### Pick
+
+- this will pick the properties from the object
+- no need to change multiple types of objects if one and other are related
+
+```typescript
+type User = {
+  name: string;
+  age: number;
+  address: string;
+};
+const user: Pick<User, 'name' | 'age'> = {
+  name: 'salman',
+  age: 22,
+};
+```
+
+### Partial
+
+- partial marks all the values as optional
+
+```typescript
+type User = {
+  name: string;
+  age: number;
+  address: string;
+};
+
+// this will make all the fields optional
+type OptionalUser = Partial<User>;
+
+type OptionalUser = Partial<>;
+```
+
+## Readonly
+
+- as the name suggest, it will make any propery read only
+- not can be assigned again
+
+```typescript
+type User = {
+  readonly username: string;
+  password: string;
+  age: number;
+};
+
+type People = Readonly<User>;
+```
+
+## Record
+
+- let's us give a cleaner type to object
+
+```typescript
+interface User {
+  username: string
+  email: string
+}
+
+const userObject: Record<string, User> = {
+  "username": "salman";
+  email:"salman@gmail.com"
+}
+```
+
+## Map
+
+- using js map and defining the types onto it
+
+```typescript
+const newUser = new Map<string, number>();
+newUser.set('one', 23);
+newUser.set('two', 345);
+newUser.set('three', 234);
+
+newUser.get('one');
+```
+
+## Exclude
+
+- Used to remove an option from Unions
+
+```typescript
+type NumberType = number | string | boolean;
+
+const num: Exclude<NumberType, string> = 1;
+```
+
+## Zod Infer
+
+- when writing backend codes, we generally have to write the zod schema and type for that, but using infer it will auto create the types for us from looking to the schema
+
+```typescript
+const userSchema = z.object({
+  name: z.string(),
+  age: z.number(),
+});
+
+type User = z.infer(typeof userSchema)
+type User = z.infer<typeof userSchema>
+
+
+```
+
 # Next Js
 
 ## React Server Components
@@ -1840,11 +2162,14 @@ let output2 = identity < number > 12;
     3. The child of client component don't need use `use client` to make it client component, it will by default the client component.
     4. Server client boundary is a boundary between server and client
     5. When passing the props, in cross side the data needs to be json serializable. It can be any data while sharing on the same type of components like client to client or server to server.
-    6.
 2.  Server Component - It will be rendered on the server, and will not contain any state or hooks.
-3.  it cannot use state or hooks
+    1.  it cannot use state or hooks
 
--
+## Router
+
+- to create a route in next js, we need to create a folder with the name of the router and then inside that a page file
+- to create a nested route, just create another folder in that
+- to navigate to other pages, use `Link` (import from)
 
 # SQL : Postgres
 
@@ -1900,6 +2225,8 @@ CREATE TABLE addresses (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+-- DELETE CASCASE - it will delete all the entries if the referenced entry is deleted
+
 -- INSERTING INTO ADDRESSES
 INSERT INTO addresses (user_id, address)
 VALUES (1, bihar)
@@ -1910,6 +2237,43 @@ SELECT address
 FROM addresses
 WHERE user_id = 1;
 
+
+```
+
+## Transaction
+
+- transaction is a way to execute multiple queries at once
+- it will make sure either all are done or none of them are completed
+
+```sql
+begin;
+INSERT INTO users(username, email, password) VALUES('user_name', 'user@example.com', '*********');
+INSERT INTO addresses(user_id, address) VALUES(1, bihar);
+commit;
+```
+
+## Joins
+
+- when you have to fetch data from connected tabels in the single query
+
+```sql
+SELECT users.username, addresses.address
+FROM users
+JOIN addresses ON users.id = addresses.user_id;
+```
+
+### Types of Joins
+
+- `Inner Join` - It is same like join, returns data only if there is a match
+- `Left Join` - Returns all the rows from the left table, and the matched rows from the right table
+- `Right Join` - Returns all the rows from the right table, and the matched rows from the left table
+- `Full Join` - Returns all the rows when there is a match in either left or right table
+
+## Usign pg library
+
+- pg is a library used to connect to postgres database
+
+```javascript
 
 ```
 
@@ -1949,11 +2313,129 @@ npx prisma migrate dev --name UserAndTodoAdded
 npx prisma generate
 ```
 
+## Relation
+
+- relation is just like foreign key
+- it helps to connect to other tables
+
+```prisma
+model User{
+  id Int @id @default(autoincrement())
+  username String
+  todos Todo[]
+}
+
+model Todo{
+  id @id @default(autoincrement())
+  title string
+  user_id Int
+  user User @relation(fields: [user_id], references:[id])
+}
+
+```
+
+# Docker
+
+## Volumes
+
+- to retain data between restarts
+- specifically for things like databases
+
+### Createing volumes
+
+```bash
+ docker volume create volume_database
+#  volume_database - can be any name here
+```
+
+### Mounting volumes
+
+```bash
+docker run -v vol1:/data/db -p 30009:27017 mongo
+```
+
+### Deleting a volume
+
+```bash
+docker volume rm volume_database
+```
+
+## Network
+
+- the ports running inside a docker container is not accessible to othe containers
+- to allow one container talk to another docker container
+
+```bash
+# creating network
+docker network create new_network
+
+# usign network while running images/container
+
+docker run --name container_name --network new_network -p 3000:3000 image_name
+
+```
+
+`NOTE:  while connecting to other containers always use the default ports, the host port is accessible to local machine not other container`
+
+## Using environment variables
+
+- Use `-e VAR=VALUE` to pass variables manually.
+- Use .env files to manage variables efficiently `--env-file .env`.
+
+## Multi Stage Builds
+
+- to have a different builds for dev and production
+
+### Image
+
+```bash
+FROM node:20 AS base
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm install
+
+FROM base AS developement
+COPY . .
+CDM ['npm', 'run', 'dev']
+
+FROM base AS production
+COPY . .
+RUN npm prune --production #removes dev dependencies
+CMD ['npm', 'run', 'start']
+
+```
+
+### Build
+
+```bash
+# dev build
+docker . build --target developement -t myapp:dev
+
+# prod build
+docker . build --target production -t myapp:prod
+```
+
+### Run
+
+```bash
+docker run -p 3000:3000 -e MONGO_URI=uri_URL -v .:/usr/src/app myapp:dev
+
+```
+
+## Running nodemon in the docker
+
+- nodemon directly does not run in the docker
+- we have to use `--legace-watch`
+
+```bash
+CMD ["npx", "nodemon", "--legacy-watch", "index.js"]
+```
+
 # Deployment
 
 ## Serverless
 
-- It is a backend deployment in which the cloud provider dlynamically manages teh allocation and provisioning for servers.
+- It is a backend deployment in which the cloud provider dlynamically manages the allocation and provisioning for servers.
 - The easier definition: What if you could just write the code, and the app would automatically:
   - deploy
   - auto scale
@@ -1971,11 +2453,3 @@ npx prisma generate
 3. If you have very low traffic and want to optimize for costs
 
 ## warm pool
-
-## React folder structure
-
-- -features
-
-```
-
-```
